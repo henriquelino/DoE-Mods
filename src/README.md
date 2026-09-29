@@ -1,6 +1,6 @@
 # The mods
 
-Six independent MelonLoader mods for Dungeons of Eternity. They share only
+Seven independent MelonLoader mods for Dungeons of Eternity. They share only
 `Directory.Build.props`; none of them references another's DLL.
 
 | Mod | Version | What it is |
@@ -11,6 +11,7 @@ Six independent MelonLoader mods for Dungeons of Eternity. They share only
 | [Descent](Descent/README.md) | 0.1.0 | A sixteen-floor dungeon out of the game's own generator. Gated. |
 | [StayPutVR](StayPutVR/README.md) | 0.4.0 | Taking damage, or being bitten by another player, fires a shock through the StayPutVR app over OSC. No gate. |
 | [PartyHealth](PartyHealth/README.md) | 0.1.1 | A small health bar over each friend's head, from the game's own health RPCs. No gate, sends nothing. |
+| [Brighter](Brighter/README.md) | 0.1.0 | Light added to dark rooms: a headlamp, a realtime copy of every torch, less fog. No gate, sends nothing. |
 
 ## One-time prerequisites
 
@@ -35,7 +36,7 @@ that. A build cannot overwrite a DLL while the game is running; it says so rathe
 **Game in a different folder?** Copy `src/Local.props.example` to `src/Local.props` and set
 `<GameDir>`, or set `DOE_GAME_DIR`, or pass `-p:GameDir=...`. No csproj hardcodes a path.
 
-## Things that bite, across all six
+## Things that bite, across all seven
 
 - **MelonLoader keeps every preference once written**, so changing a default in code never reaches
   a machine that ran an older build. When one player behaves differently, diff their
@@ -46,7 +47,7 @@ that. A build cannot overwrite a DLL while the game is running; it says so rathe
   (`0x35FC20` in `dump.cs`). Patching one patches thousands and the process dies. Each mod's
   `Hooks.cs` checks a target's native pointer against a known empty method before patching.
 - **Photon event codes** are divided up: CustomAvatars 140–149, LootOverhaul 150–159, VisualCues
-  160–169, Descent 170–179, StayPutVR 180–189; PartyHealth sends nothing and uses none. The game itself was seen on 1, 2, 50 and 70, and PUN
+  160–169, Descent 170–179, StayPutVR 180–189; PartyHealth and Brighter send nothing and use none. The game itself was seen on 1, 2, 50 and 70, and PUN
   reserves 200 and up.
 - **Desktop keys need the game window focused**, which in VR means clicking it once. Never bind
   Pause or Break: MelonLoader opens a console, and Break in a Windows console kills the process.
