@@ -55,6 +55,12 @@ lower `CloneIntensity`.
 Then the world shaders are lightmap-only and ignore realtime lights. The remaining route is
 a post-process exposure lift on the camera, which is a bigger job and not in this mod.
 
+## It starts off
+
+Every session begins with the mod switched off, so the game looks exactly as it shipped until
+you ask for light. Tap your forehead to switch on. Set `StartOff` to false to have the light
+on from the first frame.
+
 ## In the headset: the forehead switch
 
 The lamp is worn, so it is switched where a real one would be.

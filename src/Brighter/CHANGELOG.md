@@ -1,5 +1,10 @@
 # Brighter changelog
 
+## 0.5.0
+
+The mod starts every session switched off. The game looks as it shipped until you tap your
+forehead. `StartOff` turns that around.
+
 ## 0.4.0
 
 A point light falls off with the square of the distance, so a high setting blew out the near

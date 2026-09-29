@@ -3,7 +3,7 @@ using Brighter.Controls;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(Brighter.Core), "Brighter", "0.4.0", "henriquelino")]
+[assembly: MelonInfo(typeof(Brighter.Core), "Brighter", "0.5.0", "henriquelino")]
 [assembly: MelonGame("Othergate LLC", "Dungeons of Eternity")]
 
 namespace Brighter
@@ -21,7 +21,7 @@ namespace Brighter
     /// </summary>
     public class Core : MelonMod
     {
-        public const string Version = "0.4.0";
+        public const string Version = "0.5.0";
 
         public static Core Instance { get; private set; }
         public static MelonLogger.Instance Log => Instance.LoggerInstance;
@@ -40,8 +40,11 @@ namespace Brighter
             try { MelonPreferences.Save(); }
             catch (Exception e) { LoggerInstance.Warning($"Could not write MelonPreferences.cfg: {e.Message}"); }
 
+            Lighting.Suspended = ModConfig.StartOff.Value;
+
             LoggerInstance.Msg($"Brighter {Version} — five ways to light a dark room, each its own setting in [Brighter].");
-            LoggerInstance.Msg("In the headset: hand to your forehead and pull the trigger to switch the headlamp; hold and turn your wrist to dim it.");
+            if (Lighting.Suspended) LoggerInstance.Msg("Starting off: the game's own lighting. Tap your forehead to switch on (StartOff = false to start lit).");
+            LoggerInstance.Msg("In the headset: hand to your forehead and pull the trigger to switch the mod on or off; hold and turn your wrist to dim the headlamp.");
             LoggerInstance.Msg("At the desk (window focused): B = all on/off, ] and [ = headlamp brighter/dimmer, L = sweep the lights again, K = reload settings.");
         }
 

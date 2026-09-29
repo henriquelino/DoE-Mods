@@ -19,6 +19,9 @@ namespace Brighter
         // ---- [Brighter] ------------------------------------------------------------------
         public static MelonPreferences_Entry<bool> Enabled;
 
+        /// <summary>Start every session with the mod switched off, so the game looks as it shipped until you tap your forehead.</summary>
+        public static MelonPreferences_Entry<bool> StartOff;
+
         /// <summary>Multiplies the scene's own fog density. 0 turns fog off; 1 leaves it alone.</summary>
         public static MelonPreferences_Entry<float> FogDensityScale;
 
@@ -90,6 +93,8 @@ namespace Brighter
         {
             Main = MelonPreferences.CreateCategory("Brighter");
             Enabled = Main.CreateEntry("Enabled", true);
+            StartOff = Main.CreateEntry("StartOff", true,
+                description: "Start every session switched off. Tap your forehead to switch on. Set false to have the light on from the first frame.");
 
             FogDensityScale = Main.CreateEntry("FogDensityScale", 0f, description: "Multiplies the scene's fog density. 0 = no fog, 1 = untouched.");
             AmbientLevel = Main.CreateEntry("AmbientLevel", 0.25f, description: "Flat ambient light everywhere, 0 to 1. 0 = leave the scene alone.");
