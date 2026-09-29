@@ -101,6 +101,11 @@ The lamp is worn, so it is switched where a real one would be.
   degrees by default, with a buzz on each quarter step. The knob never reaches zero, because a
   tap is how you turn things off. Turning the knob while off switches back on.
 
+The hand has to be in *front* of your head, not merely near it, because reaching over your
+shoulder for an arrow puts a hand the same distance away. `ForeheadMinForwardMeters` (0.02) and
+`ForeheadMinHeightMeters` (-0.08) set that box. Raise the first if a quiver reach still trips
+it; lower it if the gesture has become hard to hit.
+
 By default the gesture is ignored while that hand grips something, because a weapon swing is
 also a raised hand and a pulled trigger. Set `ForeheadNeedsEmptyHand` to false if you would
 rather have it always live.

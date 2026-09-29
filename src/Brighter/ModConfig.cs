@@ -53,6 +53,10 @@ namespace Brighter
         public static MelonPreferences_Entry<bool> ForeheadSwitchEnabled;
         /// <summary>How close your hand must come to your head for the gesture to count, metres.</summary>
         public static MelonPreferences_Entry<float> ForeheadReachMeters;
+        /// <summary>How far in front of your head the hand must be, metres. Reaching over your shoulder for an arrow is behind it, so this keeps the quiver and the lamp apart.</summary>
+        public static MelonPreferences_Entry<float> ForeheadMinForwardMeters;
+        /// <summary>How far above your eyes the hand must be, metres. Negative allows a little below.</summary>
+        public static MelonPreferences_Entry<float> ForeheadMinHeightMeters;
         /// <summary>Ignore the gesture while the hand grips something. A weapon swing is a raised hand and a pulled trigger too.</summary>
         public static MelonPreferences_Entry<bool> ForeheadNeedsEmptyHand;
         /// <summary>A trigger pull shorter than this, with no turn, is a tap: it switches the lamp on or off.</summary>
@@ -124,6 +128,10 @@ namespace Brighter
             ForeheadSwitchEnabled = Main.CreateEntry("ForeheadSwitchEnabled", true,
                 description: "Hand to your forehead plus the trigger switches the whole mod off and back on. Hold and turn your wrist to dim the headlamp.");
             ForeheadReachMeters = Main.CreateEntry("ForeheadReachMeters", 0.25f, description: "How close your hand must come to your head, metres.");
+            ForeheadMinForwardMeters = Main.CreateEntry("ForeheadMinForwardMeters", 0.02f,
+                description: "The hand must be this far in front of your head. Stops an over-the-shoulder reach for an arrow from switching the lamp.");
+            ForeheadMinHeightMeters = Main.CreateEntry("ForeheadMinHeightMeters", -0.08f,
+                description: "The hand must be this far above your eyes. Negative allows a little below.");
             ForeheadNeedsEmptyHand = Main.CreateEntry("ForeheadNeedsEmptyHand", true, description: "Ignore the gesture while that hand grips something, so a weapon swing cannot trip it.");
             ForeheadTapSeconds = Main.CreateEntry("ForeheadTapSeconds", 0.45f, description: "A pull shorter than this, with no turn, toggles the lamp.");
             ForeheadTwistDeadzoneDegrees = Main.CreateEntry("ForeheadTwistDeadzoneDegrees", 15f, description: "Turn this far before the knob takes over.");

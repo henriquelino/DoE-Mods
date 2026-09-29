@@ -1,5 +1,12 @@
 # Brighter changelog
 
+## 0.9.0
+
+Drawing an arrow switched the lamp. The gesture only measured distance to the head, and an
+over-the-shoulder reach for the quiver is the same distance as a hand at your forehead. The
+hand must now be in front of your head and at about eye level or above, which the quiver reach
+is not. `ForeheadMinForwardMeters` and `ForeheadMinHeightMeters` set the box.
+
 ## 0.8.0
 
 The setback ran along the direction you look, so looking down slung the lamp overhead and lit

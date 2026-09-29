@@ -73,11 +73,19 @@ namespace Brighter.Controls
             else if (Ready(input, head, player.LeftHand, true, reach)) Grab(input, head, player.LeftHand, "left");
         }
 
-        /// <summary>The hand is at the head, the trigger is pulled, and (by default) it holds nothing.</summary>
+        /// <summary>
+        /// The hand is at your forehead, the trigger is pulled, and (by default) it holds nothing.
+        /// In front of the head, not merely near it: reaching over your shoulder for an arrow puts
+        /// a hand the same distance away, behind you.
+        /// </summary>
         private static bool Ready(XRInput input, Transform head, Transform hand, bool isLeft, float reach)
         {
             if (!Interop.Alive(hand)) return false;
             if (Vector3.Distance(hand.position, head.position) > reach) return false;
+
+            var local = head.InverseTransformPoint(hand.position);
+            if (local.z < ModConfig.ForeheadMinForwardMeters.Value) return false;
+            if (local.y < ModConfig.ForeheadMinHeightMeters.Value) return false;
 
             var trigger = Mathf.Clamp01(isLeft ? input.leftIndexTrigger : input.rightIndexTrigger);
             if (trigger < TriggerOn) return false;
