@@ -34,6 +34,8 @@ namespace Brighter
         public static MelonPreferences_Entry<float> HeadlampRange;
         /// <summary>"point" is a lamp you carry: it falls off with distance. "flood" has no falloff at all, so near and far read the same and nothing blows out.</summary>
         public static MelonPreferences_Entry<string> HeadlampMode;
+        /// <summary>Degrees the lamp aims below where you look, so a level gaze still lights the floor ahead. Flood mode only: a point light has no direction.</summary>
+        public static MelonPreferences_Entry<float> HeadlampPitchDegrees;
         /// <summary>Flood mode needs far less brightness than a point light for the same effect, so the knob is scaled by this.</summary>
         public static MelonPreferences_Entry<float> HeadlampFloodScale;
         /// <summary>Headlamp colour, hex RGB. Default is a warm white.</summary>
@@ -104,6 +106,8 @@ namespace Brighter
                 description: "How far the headlamp reaches, metres. A short range blows out the near wall and leaves the far one dark; raise it to even the room out.");
             HeadlampMode = Main.CreateEntry("HeadlampMode", "point",
                 description: "point = a lamp you carry, brighter up close. flood = no falloff at all, near and far the same, nothing blows out.");
+            HeadlampPitchDegrees = Main.CreateEntry("HeadlampPitchDegrees", 20f,
+                description: "Degrees the lamp aims below your gaze, so looking level still lights the floor ahead. Negative aims up. Flood mode only.");
             HeadlampFloodScale = Main.CreateEntry("HeadlampFloodScale", 0.2f, description: "Flood mode multiplies the knob by this, because a directional light needs far less.");
             HeadlampColor = Main.CreateEntry("HeadlampColor", "FFF0D8", description: "Headlamp colour, hex RGB.");
             HeadlampShadows = Main.CreateEntry("HeadlampShadows", false, description: "Let the headlamp cast shadows. Costs frames.");

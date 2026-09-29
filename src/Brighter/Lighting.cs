@@ -207,7 +207,9 @@ namespace Brighter
 
             _lampObject.SetActive(true);
             _lampObject.transform.position = eyes.position + eyes.forward * ModConfig.HeadlampForwardOffset.Value;
-            _lampObject.transform.rotation = eyes.rotation;
+            // Tilting down lights the floor ahead while you look level. A point light is
+            // omnidirectional, so this only changes anything in flood mode.
+            _lampObject.transform.rotation = eyes.rotation * Quaternion.Euler(ModConfig.HeadlampPitchDegrees.Value, 0f, 0f);
 
             // A point light falls off with the square of the distance, so a wall at arm's length
             // blows out and trips the game's bloom while the far wall stays dim. A directional

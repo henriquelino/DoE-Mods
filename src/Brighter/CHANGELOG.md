@@ -1,5 +1,10 @@
 # Brighter changelog
 
+## 0.6.0
+
+`HeadlampPitchDegrees` (20) aims the lamp below your gaze, so looking level lights the floor
+ahead. Flood mode only: a point light is omnidirectional and has no direction to aim.
+
 ## 0.5.0
 
 The mod starts every session switched off. The game looks as it shipped until you tap your

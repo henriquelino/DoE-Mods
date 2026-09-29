@@ -45,7 +45,13 @@ length blows out, tripping the game's bloom, while the far wall is barely lit. T
   falloff at all: near and far read the same and nothing blows out. It stops looking like a
   carried torch and starts looking like the room is simply lit, which is closer to removing
   the dark rooms than lighting them. A directional light needs much less brightness, so the
-  knob is scaled by `HeadlampFloodScale` (0.2).
+  knob is scaled by `HeadlampFloodScale` (0.2). **`HeadlampRange` does nothing in flood mode**;
+  a directional light has no position and no falloff, so it lights the whole scene, walls
+  included. That is the mode working, not a bug.
+
+`HeadlampPitchDegrees` (20) aims the lamp that many degrees below where you look, so a level
+gaze still lights the floor ahead of you. Negative aims up. It only changes anything in flood
+mode, because a point light is omnidirectional and has no direction to aim.
 
 The torch copies have the same falloff. If they blow out up close, raise `CloneRange` (9 m) or
 lower `CloneIntensity`.
