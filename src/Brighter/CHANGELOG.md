@@ -1,5 +1,16 @@
 # Brighter changelog
 
+## 0.3.0
+
+Off now means off, in three places. The tap suspended the headlamp alone, so the fog removal
+and the ambient stayed on. Suspending also only stopped new work: the torch copies already
+made kept burning and the raised lights kept their multiplier. The sweep now records what each
+light had before it touched it, and suspending hides the copies and hands the old values back.
+
+The knob was geared far too long: 90 degrees per unit against a ceiling of 6 took one and a
+half wrist rotations end to end. It now runs 0.4 to 3 across 120 degrees, one comfortable
+turn. Turning the knob while the mod is off switches it back on.
+
 ## 0.2.0
 
 The forehead switch. A hand at your head plus the trigger toggles the headlamp; holding and

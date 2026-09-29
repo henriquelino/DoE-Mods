@@ -42,10 +42,14 @@ a post-process exposure lift on the camera, which is a bigger job and not in thi
 
 The lamp is worn, so it is switched where a real one would be.
 
-- **Tap.** Put a hand to your forehead and pull the trigger. The lamp goes on or off. Turning
-  it off remembers the brightness, so the next tap brings it back at the same setting.
-- **Knob.** Keep the trigger pulled and turn your wrist. The lamp dims and brightens with the
-  turn, 90 degrees per unit by default, with a buzz on each quarter step.
+- **Tap.** Put a hand to your forehead and pull the trigger. Everything goes off, and the room
+  is exactly as the game shipped it: no headlamp, no torch copies, the game's own fog and
+  ambient. Tap again to bring it back. This is the switch to reach for when you want to see
+  what the mod is doing.
+- **Knob.** Keep the trigger pulled and turn your wrist. The headlamp dims and brightens, from
+  `ForeheadMinIntensity` to `ForeheadMaxIntensity` across `ForeheadTurnDegrees` of turn, 120
+  degrees by default, with a buzz on each quarter step. The knob never reaches zero, because a
+  tap is how you turn things off. Turning the knob while off switches back on.
 
 By default the gesture is ignored while that hand grips something, because a weapon swing is
 also a raised hand and a pulled trigger. Set `ForeheadNeedsEmptyHand` to false if you would

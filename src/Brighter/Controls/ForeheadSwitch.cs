@@ -6,8 +6,11 @@ namespace Brighter.Controls
 {
     /// <summary>
     /// The headlamp is worn, so it is switched where a real one would be. Put a hand to your
-    /// forehead and pull the trigger: a tap turns the lamp on or off, and holding while you
-    /// turn your wrist dims or brightens it, like a knob.
+    /// forehead and pull the trigger: a tap turns the mod off and back on, and holding while
+    /// you turn your wrist dims or brightens the lamp, like a knob.
+    ///
+    /// Off means off. The tap suspends every lever, not the lamp alone, so the room goes back
+    /// to the lighting the game shipped with.
     ///
     /// Input comes from the game's own abstraction (<c>XRInput.Instance</c>), the same source
     /// VisualCues and StayPutVR read. Nothing here touches <c>UnityEngine.Input</c>, which
@@ -26,9 +29,6 @@ namespace Brighter.Controls
         private static float _turnedDegrees;
         private static Vector3 _lastUp;
         private static float _lastHapticAt;
-
-        private static bool _wasOn = true;
-        private static float _lastNonZero = 1.5f;
 
         private static float _retryAt;
         private static bool _warned, _readyLogged;
@@ -98,7 +98,7 @@ namespace Brighter.Controls
             _hand = which;
             _heldSince = Time.unscaledTime;
             _turnedDegrees = 0f;
-            _startIntensity = ModConfig.HeadlampIntensity.Value;
+            _startIntensity = Mathf.Clamp(ModConfig.HeadlampIntensity.Value, ModConfig.ForeheadMinIntensity.Value, ModConfig.ForeheadMaxIntensity.Value);
             _lastUp = hand.up;
             _lastHapticAt = _startIntensity;
         }
@@ -125,14 +125,16 @@ namespace Brighter.Controls
             if (!_twisted)
             {
                 _twisted = true;
+                // Reaching for the knob means you want light, so the turn also undoes a tap.
+                if (Lighting.Suspended) { Lighting.Suspended = false; Core.Log.Msg("Brighter on."); }
                 Core.Log.Msg("Headlamp knob: turn your wrist.");
             }
 
-            var perUnit = Mathf.Max(15f, ModConfig.ForeheadDegreesPerUnit.Value);
-            var wanted = Mathf.Clamp(_startIntensity + _turnedDegrees / perUnit, 0f, ModConfig.ForeheadMaxIntensity.Value);
+            var min = ModConfig.ForeheadMinIntensity.Value;
+            var max = Mathf.Max(min + 0.1f, ModConfig.ForeheadMaxIntensity.Value);
+            var sweep = Mathf.Max(30f, ModConfig.ForeheadTurnDegrees.Value);
+            var wanted = Mathf.Clamp(_startIntensity + _turnedDegrees / sweep * (max - min), min, max);
             ModConfig.HeadlampIntensity.Value = wanted;
-            if (wanted > 0f) _lastNonZero = wanted;
-            _wasOn = wanted > 0f;
 
             // One tick per quarter step, so the knob has detents you can feel.
             if (Mathf.Abs(wanted - _lastHapticAt) >= 0.25f)
@@ -157,19 +159,9 @@ namespace Brighter.Controls
 
             if (Time.unscaledTime - _heldSince > ModConfig.ForeheadTapSeconds.Value) return;   // a long press that never turned does nothing
 
-            if (_wasOn && ModConfig.HeadlampIntensity.Value > 0f)
-            {
-                _lastNonZero = ModConfig.HeadlampIntensity.Value;
-                ModConfig.HeadlampIntensity.Value = 0f;
-                _wasOn = false;
-                Core.Log.Msg("Headlamp off.");
-            }
-            else
-            {
-                ModConfig.HeadlampIntensity.Value = _lastNonZero > 0f ? _lastNonZero : 1.5f;
-                _wasOn = true;
-                Core.Log.Msg($"Headlamp on, {ModConfig.HeadlampIntensity.Value:0.##}.");
-            }
+            // Every lever, not the lamp alone: off has to mean the lighting the game shipped with.
+            Lighting.Suspended = !Lighting.Suspended;
+            Core.Log.Msg(Lighting.Suspended ? "Brighter off: the game's own lighting is back." : "Brighter on.");
 
             Haptic(input, isLeft, 0.6f, 2f);
         }

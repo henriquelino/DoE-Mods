@@ -38,6 +38,19 @@ namespace Brighter
 
         // ---- sweep -------------------------------------------------------------------------
         private static readonly HashSet<int> Seen = new HashSet<int>();
+
+        /// <summary>A light the sweep changed, with the values it had before, so suspending can hand them back.</summary>
+        private struct Touched
+        {
+            public Light Light;
+            public float Intensity;
+            public float Range;
+            public bool WasInactive;
+        }
+
+        private static readonly List<Touched> Changed = new List<Touched>();
+        private static readonly List<GameObject> Clones = new List<GameObject>();
+        private static bool _leversApplied = true;
         private static float _nextSweepAt;
         private static int _boosted, _cloned, _enabled;
         private static string _scene = "?";
@@ -47,6 +60,9 @@ namespace Brighter
             _scene = sceneName;
             _captured = false;          // the new scene brings its own fog and ambient
             Seen.Clear();
+            Changed.Clear();
+            Clones.Clear();          // the scene that held them is gone; the objects went with it
+            _leversApplied = Active;   // a new scene starts in whatever state the mod is in
             _boosted = _cloned = _enabled = 0;
             _eyes = null;
             _nextSweepAt = Time.unscaledTime + Mathf.Max(0f, ModConfig.SweepDelaySeconds.Value);
@@ -61,7 +77,43 @@ namespace Brighter
         public static void Tick()
         {
             try { ApplyEnvironment(); } catch (Exception e) { Warn("environment", e); }
+            try { ApplyLevers(); } catch (Exception e) { Warn("levers", e); }
             try { if (Active) Sweep(); } catch (Exception e) { Warn("sweep", e); }
+        }
+
+        /// <summary>
+        /// Switching the mod off has to reach the work already done: a copied light keeps burning
+        /// and a raised intensity keeps its multiplier until they are handed back.
+        /// </summary>
+        private static void ApplyLevers()
+        {
+            if (Active == _leversApplied) return;
+            _leversApplied = Active;
+
+            for (var i = 0; i < Clones.Count; i++)
+                if (Interop.Alive(Clones[i])) Clones[i].SetActive(Active);
+
+            for (var i = 0; i < Changed.Count; i++)
+            {
+                var t = Changed[i];
+                if (!Interop.Alive(t.Light)) continue;
+                try
+                {
+                    if (Active)
+                    {
+                        t.Light.intensity = t.Intensity * ModConfig.SceneLightBoost.Value;
+                        if (t.Light.type != LightType.Directional) t.Light.range = t.Range * ModConfig.SceneLightRangeScale.Value;
+                        if (t.WasInactive) t.Light.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        t.Light.intensity = t.Intensity;
+                        if (t.Light.type != LightType.Directional) t.Light.range = t.Range;
+                        if (t.WasInactive) t.Light.gameObject.SetActive(false);
+                    }
+                }
+                catch { }
+            }
         }
 
         public static void LateTick()
@@ -232,10 +284,13 @@ namespace Brighter
                     if (light.name.StartsWith(Prefix, StringComparison.Ordinal)) continue;
 
                     var go = light.gameObject;
-                    if (ModConfig.EnableDisabledLights.Value && !go.activeSelf) { go.SetActive(true); _enabled++; }
+                    var record = new Touched { Light = light, Intensity = light.intensity, Range = light.range, WasInactive = false };
+
+                    if (ModConfig.EnableDisabledLights.Value && !go.activeSelf) { go.SetActive(true); record.WasInactive = true; _enabled++; }
 
                     if (boost != 1f) light.intensity *= boost;
                     if (rangeScale != 1f && light.type != LightType.Directional) light.range *= rangeScale;
+                    Changed.Add(record);
                     _boosted++;
 
                     if (clone && _cloned < ModConfig.MaxClonedLights.Value) Clone(light);
@@ -272,6 +327,7 @@ namespace Brighter
             fill.shadows = LightShadows.None;
             fill.renderMode = LightRenderMode.ForcePixel;
             fill.cullingMask = -1;
+            Clones.Add(go);
             _cloned++;
         }
 
