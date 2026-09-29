@@ -1,5 +1,15 @@
 # Brighter changelog
 
+## 0.8.0
+
+The setback ran along the direction you look, so looking down slung the lamp overhead and lit
+the floor instead of the room. It runs along the direction you face now, and head tilt no
+longer moves the light.
+
+`HeadlampHeightMeters` (2.5) lifts the lamp above your head, which puts more light on the
+floor ahead. `HeadlampRange` now measures from your head rather than from the lamp, so the
+setback and the height no longer eat into the distance you asked for.
+
 ## 0.7.0
 
 `soft` is the new default lamp mode, and the middle ground between the other two. Point mode

@@ -220,14 +220,27 @@ namespace Brighter
             // its range by the same amount flattens that curve without giving up a bounded reach:
             // at 20 m from the source, 21 m and 30 m are close to the same brightness.
             var backoff = mode == "soft" ? Mathf.Max(0f, ModConfig.HeadlampSetbackMeters.Value) : 0f;
-            var lightRange = reach + backoff;
+            var height = flood ? 0f : ModConfig.HeadlampHeightMeters.Value;
+
+            // How far the lamp sits from your head, so HeadlampRange still means "metres lit
+            // ahead of me" rather than metres from a source standing somewhere behind you.
+            var away = Mathf.Sqrt(backoff * backoff + height * height);
+            var lightRange = reach + away;
 
             // Unity's point falloff is about 1/(1 + 25 d²/r²). Undoing it at the head keeps the
             // knob meaning the same brightness whatever the setback is.
-            var compensation = 1f + 25f * (backoff * backoff) / (lightRange * lightRange);
+            var compensation = 1f + 25f * (away * away) / (lightRange * lightRange);
+
+            // Set the lamp back along the direction you face, not the direction you look. Using
+            // eyes.forward slung the light overhead every time you looked down, which lit the
+            // floor and nothing else.
+            var flat = eyes.forward; flat.y = 0f;
+            flat = flat.sqrMagnitude > 0.0001f ? flat.normalized : Vector3.forward;
 
             _lamp.type = flood ? LightType.Directional : LightType.Point;
-            _lampObject.transform.position = eyes.position + eyes.forward * (ModConfig.HeadlampForwardOffset.Value - backoff);
+            _lampObject.transform.position = eyes.position
+                                           + flat * (ModConfig.HeadlampForwardOffset.Value - backoff)
+                                           + Vector3.up * height;
             _lamp.range = lightRange;
             _lamp.intensity = ModConfig.HeadlampIntensity.Value * (flood ? ModConfig.HeadlampFloodScale.Value : compensation);
             _lamp.shadows = ModConfig.HeadlampShadows.Value ? LightShadows.Soft : LightShadows.None;

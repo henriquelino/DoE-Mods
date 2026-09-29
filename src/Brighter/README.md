@@ -54,6 +54,26 @@ the far wall dim.
 gaze still lights the floor ahead. Negative aims up. Flood mode only, because a point light is
 omnidirectional and has no direction to aim.
 
+`HeadlampHeightMeters` (2.5) lifts the lamp above your head, which puts more light on the
+floor, like a lamp on the ceiling instead of one at your eyes. Point and soft modes only.
+
+The setback and the height are measured along the direction you *face*, not the direction you
+*look*, so tilting your head does not sling the light around.
+
+## Why the distance can look darker than vanilla
+
+The game tonemaps the frame. A bright pool of light around you raises the average brightness,
+the exposure comes down to compensate, and everything outside the pool is crushed darker than
+it was before the mod. Adding more local light makes the distance worse.
+
+The cure is even light rather than more light:
+
+- Raise `AmbientLevel`. Ambient is flat, so it lifts the far end of the room as much as your
+  feet and costs the exposure nothing.
+- Lower `HeadlampIntensity`, and raise `HeadlampSetbackMeters` so what remains is spread out.
+- Keep `HeadlampRange` well past what you want to see. The light ends hard at that distance, so
+  a short range is its own black wall.
+
 The torch copies have the full squared falloff too. If they blow out up close, raise
 `CloneRange` (9 m) or lower `CloneIntensity`.
 

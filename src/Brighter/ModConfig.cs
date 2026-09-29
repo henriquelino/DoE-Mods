@@ -34,6 +34,8 @@ namespace Brighter
         public static MelonPreferences_Entry<float> HeadlampRange;
         /// <summary>"soft" is a bounded range with an even near field. "point" is a lamp you carry, bright up close. "flood" has no range at all and lights the whole scene.</summary>
         public static MelonPreferences_Entry<string> HeadlampMode;
+        /// <summary>Metres the lamp sits above your head. Higher puts more light on the floor, like a lamp on the ceiling rather than one at your eyes. Point and soft modes only.</summary>
+        public static MelonPreferences_Entry<float> HeadlampHeightMeters;
         /// <summary>Soft mode stands the light this far behind your head and extends its range to match. Larger is more even and less like a carried lamp.</summary>
         public static MelonPreferences_Entry<float> HeadlampSetbackMeters;
         /// <summary>Degrees the lamp aims below where you look, so a level gaze still lights the floor ahead. Flood mode only: a point light has no direction.</summary>
@@ -108,6 +110,8 @@ namespace Brighter
                 description: "How far the headlamp reaches, metres. A short range blows out the near wall and leaves the far one dark; raise it to even the room out.");
             HeadlampMode = Main.CreateEntry("HeadlampMode", "soft",
                 description: "soft = a bounded range that stays even up close. point = a lamp you carry, much brighter up close. flood = no range at all, the whole scene lit.");
+            HeadlampHeightMeters = Main.CreateEntry("HeadlampHeightMeters", 2.5f,
+                description: "Metres the lamp sits above your head. Higher puts more light on the floor. Point and soft modes only.");
             HeadlampSetbackMeters = Main.CreateEntry("HeadlampSetbackMeters", 18f,
                 description: "Soft mode only. How far behind your head the light stands. Larger is more even; 0 is the same as point mode.");
             HeadlampPitchDegrees = Main.CreateEntry("HeadlampPitchDegrees", 20f,
