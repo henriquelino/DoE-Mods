@@ -36,6 +36,23 @@ namespace Brighter
         /// <summary>Metres the headlamp sits ahead of your eyes, so it does not light the inside of your own head.</summary>
         public static MelonPreferences_Entry<float> HeadlampForwardOffset;
 
+        /// <summary>Hand to your forehead plus the trigger switches the headlamp. Hold and turn your wrist to dim it.</summary>
+        public static MelonPreferences_Entry<bool> ForeheadSwitchEnabled;
+        /// <summary>How close your hand must come to your head for the gesture to count, metres.</summary>
+        public static MelonPreferences_Entry<float> ForeheadReachMeters;
+        /// <summary>Ignore the gesture while the hand grips something. A weapon swing is a raised hand and a pulled trigger too.</summary>
+        public static MelonPreferences_Entry<bool> ForeheadNeedsEmptyHand;
+        /// <summary>A trigger pull shorter than this, with no turn, is a tap: it switches the lamp on or off.</summary>
+        public static MelonPreferences_Entry<float> ForeheadTapSeconds;
+        /// <summary>Turn your wrist this far before the knob takes over, degrees. Stops a tap from nudging the brightness.</summary>
+        public static MelonPreferences_Entry<float> ForeheadTwistDeadzoneDegrees;
+        /// <summary>Degrees of wrist turn for one unit of brightness. Larger is a finer knob.</summary>
+        public static MelonPreferences_Entry<float> ForeheadDegreesPerUnit;
+        /// <summary>The knob never goes past this brightness.</summary>
+        public static MelonPreferences_Entry<float> ForeheadMaxIntensity;
+        /// <summary>Buzz the controller on each step of the knob and on each toggle.</summary>
+        public static MelonPreferences_Entry<bool> ForeheadHaptics;
+
         /// <summary>Multiplies the intensity of every light already in the scene. 1 leaves them alone. A light the level baked contributes nothing at runtime, so this does nothing for those.</summary>
         public static MelonPreferences_Entry<float> SceneLightBoost;
         /// <summary>Multiplies the reach of every light already in the scene. 1 leaves them alone.</summary>
@@ -76,6 +93,16 @@ namespace Brighter
             HeadlampColor = Main.CreateEntry("HeadlampColor", "FFF0D8", description: "Headlamp colour, hex RGB.");
             HeadlampShadows = Main.CreateEntry("HeadlampShadows", false, description: "Let the headlamp cast shadows. Costs frames.");
             HeadlampForwardOffset = Main.CreateEntry("HeadlampForwardOffset", 0.25f, description: "Metres ahead of your eyes the headlamp sits.");
+
+            ForeheadSwitchEnabled = Main.CreateEntry("ForeheadSwitchEnabled", true,
+                description: "Hand to your forehead plus the trigger switches the headlamp. Hold and turn your wrist to dim it.");
+            ForeheadReachMeters = Main.CreateEntry("ForeheadReachMeters", 0.25f, description: "How close your hand must come to your head, metres.");
+            ForeheadNeedsEmptyHand = Main.CreateEntry("ForeheadNeedsEmptyHand", true, description: "Ignore the gesture while that hand grips something, so a weapon swing cannot trip it.");
+            ForeheadTapSeconds = Main.CreateEntry("ForeheadTapSeconds", 0.45f, description: "A pull shorter than this, with no turn, toggles the lamp.");
+            ForeheadTwistDeadzoneDegrees = Main.CreateEntry("ForeheadTwistDeadzoneDegrees", 15f, description: "Turn this far before the knob takes over.");
+            ForeheadDegreesPerUnit = Main.CreateEntry("ForeheadDegreesPerUnit", 90f, description: "Degrees of wrist turn per unit of brightness. Larger is finer.");
+            ForeheadMaxIntensity = Main.CreateEntry("ForeheadMaxIntensity", 6f);
+            ForeheadHaptics = Main.CreateEntry("ForeheadHaptics", true, description: "Buzz the controller on each step and on each toggle.");
 
             SceneLightBoost = Main.CreateEntry("SceneLightBoost", 1.6f, description: "Multiplies every existing light's intensity. 1 = untouched.");
             SceneLightRangeScale = Main.CreateEntry("SceneLightRangeScale", 1.3f, description: "Multiplies every existing light's reach. 1 = untouched.");

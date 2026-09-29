@@ -38,7 +38,26 @@ first if the headset drops below 90.
 Then the world shaders are lightmap-only and ignore realtime lights. The remaining route is
 a post-process exposure lift on the camera, which is a bigger job and not in this mod.
 
-## Hotkeys
+## In the headset: the forehead switch
+
+The lamp is worn, so it is switched where a real one would be.
+
+- **Tap.** Put a hand to your forehead and pull the trigger. The lamp goes on or off. Turning
+  it off remembers the brightness, so the next tap brings it back at the same setting.
+- **Knob.** Keep the trigger pulled and turn your wrist. The lamp dims and brightens with the
+  turn, 90 degrees per unit by default, with a buzz on each quarter step.
+
+By default the gesture is ignored while that hand grips something, because a weapon swing is
+also a raised hand and a pulled trigger. Set `ForeheadNeedsEmptyHand` to false if you would
+rather have it always live.
+
+Input comes from the game's own `XRInput`, the same source VisualCues and StayPutVR read.
+
+## Hotkeys at the desk
+
+Game 1.3 reads input through the Input System package, so `UnityEngine.Input` throws the first
+time a mod reads it. This mod says so once and then leaves the desktop keys alone for the
+session. If a future game build brings them back, these are the bindings.
 
 The game window must have focus, which in VR means clicking it once.
 

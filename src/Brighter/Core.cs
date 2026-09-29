@@ -1,8 +1,9 @@
 using System;
+using Brighter.Controls;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(Brighter.Core), "Brighter", "0.1.0", "henriquelino")]
+[assembly: MelonInfo(typeof(Brighter.Core), "Brighter", "0.2.0", "henriquelino")]
 [assembly: MelonGame("Othergate LLC", "Dungeons of Eternity")]
 
 namespace Brighter
@@ -20,10 +21,17 @@ namespace Brighter
     /// </summary>
     public class Core : MelonMod
     {
-        public const string Version = "0.1.0";
+        public const string Version = "0.2.0";
 
         public static Core Instance { get; private set; }
         public static MelonLogger.Instance Log => Instance.LoggerInstance;
+
+        /// <summary>
+        /// Game 1.3 reads input through the Input System package, so <c>UnityEngine.Input</c> throws
+        /// on the first read. One warning, then the desktop keys go quiet: the gesture and the
+        /// settings file are the ways in.
+        /// </summary>
+        private bool _keyboardDead;
 
         public override void OnInitializeMelon()
         {
@@ -33,14 +41,16 @@ namespace Brighter
             catch (Exception e) { LoggerInstance.Warning($"Could not write MelonPreferences.cfg: {e.Message}"); }
 
             LoggerInstance.Msg($"Brighter {Version} — five ways to light a dark room, each its own setting in [Brighter].");
-            LoggerInstance.Msg("Hotkeys (window focused): B = all on/off, ] and [ = headlamp brighter/dimmer, L = sweep the lights again, K = reload settings.");
+            LoggerInstance.Msg("In the headset: hand to your forehead and pull the trigger to switch the headlamp; hold and turn your wrist to dim it.");
+            LoggerInstance.Msg("At the desk (window focused): B = all on/off, ] and [ = headlamp brighter/dimmer, L = sweep the lights again, K = reload settings.");
         }
 
         public override void OnUpdate()
         {
             Lighting.Tick();
+            ForeheadSwitch.Tick();
 
-            if (!ModConfig.HotkeysEnabled.Value) return;
+            if (_keyboardDead || !ModConfig.HotkeysEnabled.Value) return;
             try
             {
                 if (Input.GetKeyDown(KeyCode.B))
@@ -69,7 +79,11 @@ namespace Brighter
                     LoggerInstance.Msg("Settings reloaded from MelonPreferences.cfg.");
                 }
             }
-            catch (Exception e) { LoggerInstance.Warning($"Hotkey threw: {e.GetType().Name}: {e.Message}"); }
+            catch (Exception e)
+            {
+                _keyboardDead = true;
+                LoggerInstance.Warning($"Desktop keys are off for this session ({e.GetType().Name}: {e.Message}). Use the forehead gesture, or edit MelonPreferences.cfg with the game closed.");
+            }
         }
 
         public override void OnLateUpdate()
