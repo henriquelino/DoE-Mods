@@ -32,8 +32,10 @@ namespace Brighter
         public static MelonPreferences_Entry<float> HeadlampIntensity;
         /// <summary>How far the headlamp reaches, metres. A short range means a bright near wall and a dark far one, because the falloff is squared. Raise it to even the room out.</summary>
         public static MelonPreferences_Entry<float> HeadlampRange;
-        /// <summary>"point" is a lamp you carry: it falls off with distance. "flood" has no falloff at all, so near and far read the same and nothing blows out.</summary>
+        /// <summary>"soft" is a bounded range with an even near field. "point" is a lamp you carry, bright up close. "flood" has no range at all and lights the whole scene.</summary>
         public static MelonPreferences_Entry<string> HeadlampMode;
+        /// <summary>Soft mode stands the light this far behind your head and extends its range to match. Larger is more even and less like a carried lamp.</summary>
+        public static MelonPreferences_Entry<float> HeadlampSetbackMeters;
         /// <summary>Degrees the lamp aims below where you look, so a level gaze still lights the floor ahead. Flood mode only: a point light has no direction.</summary>
         public static MelonPreferences_Entry<float> HeadlampPitchDegrees;
         /// <summary>Flood mode needs far less brightness than a point light for the same effect, so the knob is scaled by this.</summary>
@@ -104,8 +106,10 @@ namespace Brighter
             HeadlampIntensity = Main.CreateEntry("HeadlampIntensity", 1.5f, description: "Brightness of the light that follows your head. 0 = off.");
             HeadlampRange = Main.CreateEntry("HeadlampRange", 32f,
                 description: "How far the headlamp reaches, metres. A short range blows out the near wall and leaves the far one dark; raise it to even the room out.");
-            HeadlampMode = Main.CreateEntry("HeadlampMode", "point",
-                description: "point = a lamp you carry, brighter up close. flood = no falloff at all, near and far the same, nothing blows out.");
+            HeadlampMode = Main.CreateEntry("HeadlampMode", "soft",
+                description: "soft = a bounded range that stays even up close. point = a lamp you carry, much brighter up close. flood = no range at all, the whole scene lit.");
+            HeadlampSetbackMeters = Main.CreateEntry("HeadlampSetbackMeters", 18f,
+                description: "Soft mode only. How far behind your head the light stands. Larger is more even; 0 is the same as point mode.");
             HeadlampPitchDegrees = Main.CreateEntry("HeadlampPitchDegrees", 20f,
                 description: "Degrees the lamp aims below your gaze, so looking level still lights the floor ahead. Negative aims up. Flood mode only.");
             HeadlampFloodScale = Main.CreateEntry("HeadlampFloodScale", 0.2f, description: "Flood mode multiplies the knob by this, because a directional light needs far less.");

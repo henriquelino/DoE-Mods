@@ -206,18 +206,30 @@ namespace Brighter
             if (!Interop.Alive(eyes)) { _lampObject.SetActive(false); return; }
 
             _lampObject.SetActive(true);
-            _lampObject.transform.position = eyes.position + eyes.forward * ModConfig.HeadlampForwardOffset.Value;
+
             // Tilting down lights the floor ahead while you look level. A point light is
             // omnidirectional, so this only changes anything in flood mode.
             _lampObject.transform.rotation = eyes.rotation * Quaternion.Euler(ModConfig.HeadlampPitchDegrees.Value, 0f, 0f);
 
-            // A point light falls off with the square of the distance, so a wall at arm's length
-            // blows out and trips the game's bloom while the far wall stays dim. A directional
-            // light has no falloff at all: near and far read the same.
-            var flood = string.Equals((ModConfig.HeadlampMode.Value ?? "point").Trim(), "flood", StringComparison.OrdinalIgnoreCase);
+            var mode = (ModConfig.HeadlampMode.Value ?? "soft").Trim().ToLowerInvariant();
+            var flood = mode == "flood";
+            var reach = Mathf.Max(1f, ModConfig.HeadlampRange.Value);
+
+            // A point light at your eyes falls off with the square of the distance, so the near
+            // wall blows out while the far one stays dark. Standing the light back and extending
+            // its range by the same amount flattens that curve without giving up a bounded reach:
+            // at 20 m from the source, 21 m and 30 m are close to the same brightness.
+            var backoff = mode == "soft" ? Mathf.Max(0f, ModConfig.HeadlampSetbackMeters.Value) : 0f;
+            var lightRange = reach + backoff;
+
+            // Unity's point falloff is about 1/(1 + 25 d²/r²). Undoing it at the head keeps the
+            // knob meaning the same brightness whatever the setback is.
+            var compensation = 1f + 25f * (backoff * backoff) / (lightRange * lightRange);
+
             _lamp.type = flood ? LightType.Directional : LightType.Point;
-            _lamp.intensity = ModConfig.HeadlampIntensity.Value * (flood ? ModConfig.HeadlampFloodScale.Value : 1f);
-            _lamp.range = ModConfig.HeadlampRange.Value;
+            _lampObject.transform.position = eyes.position + eyes.forward * (ModConfig.HeadlampForwardOffset.Value - backoff);
+            _lamp.range = lightRange;
+            _lamp.intensity = ModConfig.HeadlampIntensity.Value * (flood ? ModConfig.HeadlampFloodScale.Value : compensation);
             _lamp.shadows = ModConfig.HeadlampShadows.Value ? LightShadows.Soft : LightShadows.None;
             _lamp.color = ParseColor(ModConfig.HeadlampColor.Value);
         }

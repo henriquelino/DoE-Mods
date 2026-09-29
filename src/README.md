@@ -11,7 +11,7 @@ Seven independent MelonLoader mods for Dungeons of Eternity. They share only
 | [Descent](Descent/README.md) | 0.1.0 | A sixteen-floor dungeon out of the game's own generator. Gated. |
 | [StayPutVR](StayPutVR/README.md) | 0.4.0 | Taking damage, or being bitten by another player, fires a shock through the StayPutVR app over OSC. No gate. |
 | [PartyHealth](PartyHealth/README.md) | 0.1.1 | A small health bar over each friend's head, from the game's own health RPCs. No gate, sends nothing. |
-| [Brighter](Brighter/README.md) | 0.6.0 | Light added to dark rooms: a headlamp, a realtime copy of every torch, less fog. No gate, sends nothing. |
+| [Brighter](Brighter/README.md) | 0.7.0 | Light added to dark rooms: a headlamp, a realtime copy of every torch, less fog. No gate, sends nothing. |
 
 ## One-time prerequisites
 

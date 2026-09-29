@@ -33,28 +33,29 @@ on its shaders and that is not known yet. Turn them on one at a time and keep wh
 into vertex light. Added lights do not count for much below it. It costs frames; lower it
 first if the headset drops below 90.
 
-## Point or flood
+## The three lamp modes
 
-A point light falls off with the square of the distance. Turn it up and the wall at arm's
-length blows out, tripping the game's bloom, while the far wall is barely lit. Two ways out:
+`HeadlampMode` picks how the light behaves. A point light falls off with the square of the
+distance, which is why a bright setting blows out the wall at arm's length and still leaves
+the far wall dim.
 
-- **Range.** `HeadlampRange` sets where the falloff ends, and a longer range is a flatter
-  curve. The default is 32 m. At 14 m a surface 1 m away reads about twelve times brighter
-  than one 10 m away; at 32 m that gap is under three.
-- **Flood.** Set `HeadlampMode` to `flood`. The lamp becomes a directional light, which has no
-  falloff at all: near and far read the same and nothing blows out. It stops looking like a
-  carried torch and starts looking like the room is simply lit, which is closer to removing
-  the dark rooms than lighting them. A directional light needs much less brightness, so the
-  knob is scaled by `HeadlampFloodScale` (0.2). **`HeadlampRange` does nothing in flood mode**;
-  a directional light has no position and no falloff, so it lights the whole scene, walls
-  included. That is the mode working, not a bug.
+- **`soft`** (the default) is the middle ground: a point light stood `HeadlampSetbackMeters`
+  behind your head, with its range extended by the same amount. From 18 m away, a surface at
+  19 m and one at 28 m get close to the same light, so the near field stops blowing out, and
+  the reach still ends where `HeadlampRange` says. The knob is scaled back up so the setback
+  does not cost you brightness.
+- **`point`** is the lamp you carry, with the full squared falloff. Bright up close, dark
+  across the room.
+- **`flood`** is a directional light: no position, no falloff, no range. It lights the whole
+  scene, walls included. `HeadlampRange` and `HeadlampSetbackMeters` do nothing here. The knob
+  is scaled by `HeadlampFloodScale` (0.2), because a directional light needs far less.
 
 `HeadlampPitchDegrees` (20) aims the lamp that many degrees below where you look, so a level
-gaze still lights the floor ahead of you. Negative aims up. It only changes anything in flood
-mode, because a point light is omnidirectional and has no direction to aim.
+gaze still lights the floor ahead. Negative aims up. Flood mode only, because a point light is
+omnidirectional and has no direction to aim.
 
-The torch copies have the same falloff. If they blow out up close, raise `CloneRange` (9 m) or
-lower `CloneIntensity`.
+The torch copies have the full squared falloff too. If they blow out up close, raise
+`CloneRange` (9 m) or lower `CloneIntensity`.
 
 ## If none of them work
 

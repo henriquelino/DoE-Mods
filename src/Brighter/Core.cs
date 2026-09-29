@@ -3,7 +3,7 @@ using Brighter.Controls;
 using MelonLoader;
 using UnityEngine;
 
-[assembly: MelonInfo(typeof(Brighter.Core), "Brighter", "0.6.0", "henriquelino")]
+[assembly: MelonInfo(typeof(Brighter.Core), "Brighter", "0.7.0", "henriquelino")]
 [assembly: MelonGame("Othergate LLC", "Dungeons of Eternity")]
 
 namespace Brighter
@@ -21,7 +21,7 @@ namespace Brighter
     /// </summary>
     public class Core : MelonMod
     {
-        public const string Version = "0.6.0";
+        public const string Version = "0.7.0";
 
         public static Core Instance { get; private set; }
         public static MelonLogger.Instance Log => Instance.LoggerInstance;

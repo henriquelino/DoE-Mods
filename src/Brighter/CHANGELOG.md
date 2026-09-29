@@ -1,5 +1,13 @@
 # Brighter changelog
 
+## 0.7.0
+
+`soft` is the new default lamp mode, and the middle ground between the other two. Point mode
+blew out the near wall; flood mode had no range at all and lit the whole scene. Soft stands the
+point light `HeadlampSetbackMeters` (18) behind your head and extends its range to match, so
+the near field evens out while the reach still ends where `HeadlampRange` says. The knob is
+scaled back up so the setback costs no brightness.
+
 ## 0.6.0
 
 `HeadlampPitchDegrees` (20) aims the lamp below your gaze, so looking level lights the floor
