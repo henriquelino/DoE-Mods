@@ -25,13 +25,30 @@ on its shaders and that is not known yet. Turn them on one at a time and keep wh
 |---|---|---|
 | `FogDensityScale` | 0 removes fog. | Always. In a dark dungeon the haze often costs more sight than the missing light. |
 | `AmbientLevel` | Flat ambient light everywhere. | Lifts players, monsters, dropped items. Baked walls probably ignore it. |
-| `HeadlampIntensity` | A realtime point light that follows your head. | Whatever the bake did. This is the lever to try first. |
+| `HeadlampIntensity` | A realtime light that follows your head. | Whatever the bake did. This is the lever to try first. |
 | `CloneSceneLights` | A new realtime light on every torch and lamp in the scene. | Whatever the bake did, if the world shaders accept realtime lights at all. |
 | `SceneLightBoost` | Raises the intensity of the lights already there. | Only for lights the level left realtime. Does nothing for baked ones. |
 
 `PixelLightCount` decides how many lights the renderer draws per-pixel instead of folding
 into vertex light. Added lights do not count for much below it. It costs frames; lower it
 first if the headset drops below 90.
+
+## Point or flood
+
+A point light falls off with the square of the distance. Turn it up and the wall at arm's
+length blows out, tripping the game's bloom, while the far wall is barely lit. Two ways out:
+
+- **Range.** `HeadlampRange` sets where the falloff ends, and a longer range is a flatter
+  curve. The default is 32 m. At 14 m a surface 1 m away reads about twelve times brighter
+  than one 10 m away; at 32 m that gap is under three.
+- **Flood.** Set `HeadlampMode` to `flood`. The lamp becomes a directional light, which has no
+  falloff at all: near and far read the same and nothing blows out. It stops looking like a
+  carried torch and starts looking like the room is simply lit, which is closer to removing
+  the dark rooms than lighting them. A directional light needs much less brightness, so the
+  knob is scaled by `HeadlampFloodScale` (0.2).
+
+The torch copies have the same falloff. If they blow out up close, raise `CloneRange` (9 m) or
+lower `CloneIntensity`.
 
 ## If none of them work
 

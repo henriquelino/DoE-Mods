@@ -1,5 +1,16 @@
 # Brighter changelog
 
+## 0.4.0
+
+A point light falls off with the square of the distance, so a high setting blew out the near
+wall into the game's bloom while the far wall stayed dim. `HeadlampRange` goes from 14 m to
+32 m, which flattens the curve: the near-to-far gap at 1 m and 10 m drops from about twelve
+times to under three.
+
+`HeadlampMode` is new. Set it to `flood` and the lamp becomes a directional light with no
+falloff at all, so near and far read the same and nothing blows out. It reads as a lit room
+rather than a carried torch.
+
 ## 0.3.0
 
 Off now means off, in three places. The tap suspended the headlamp alone, so the fog removal

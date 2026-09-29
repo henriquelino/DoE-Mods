@@ -27,8 +27,12 @@ namespace Brighter
 
         /// <summary>Brightness of the light that follows your head. 0 turns it off. This is the lever that works whatever the bake did.</summary>
         public static MelonPreferences_Entry<float> HeadlampIntensity;
-        /// <summary>How far the headlamp reaches, metres.</summary>
+        /// <summary>How far the headlamp reaches, metres. A short range means a bright near wall and a dark far one, because the falloff is squared. Raise it to even the room out.</summary>
         public static MelonPreferences_Entry<float> HeadlampRange;
+        /// <summary>"point" is a lamp you carry: it falls off with distance. "flood" has no falloff at all, so near and far read the same and nothing blows out.</summary>
+        public static MelonPreferences_Entry<string> HeadlampMode;
+        /// <summary>Flood mode needs far less brightness than a point light for the same effect, so the knob is scaled by this.</summary>
+        public static MelonPreferences_Entry<float> HeadlampFloodScale;
         /// <summary>Headlamp colour, hex RGB. Default is a warm white.</summary>
         public static MelonPreferences_Entry<string> HeadlampColor;
         /// <summary>Let the headlamp cast shadows. Costs frames, and a light at your eyes casts almost none you can see.</summary>
@@ -91,7 +95,11 @@ namespace Brighter
             AmbientLevel = Main.CreateEntry("AmbientLevel", 0.25f, description: "Flat ambient light everywhere, 0 to 1. 0 = leave the scene alone.");
 
             HeadlampIntensity = Main.CreateEntry("HeadlampIntensity", 1.5f, description: "Brightness of the light that follows your head. 0 = off.");
-            HeadlampRange = Main.CreateEntry("HeadlampRange", 14f, description: "How far the headlamp reaches, metres.");
+            HeadlampRange = Main.CreateEntry("HeadlampRange", 32f,
+                description: "How far the headlamp reaches, metres. A short range blows out the near wall and leaves the far one dark; raise it to even the room out.");
+            HeadlampMode = Main.CreateEntry("HeadlampMode", "point",
+                description: "point = a lamp you carry, brighter up close. flood = no falloff at all, near and far the same, nothing blows out.");
+            HeadlampFloodScale = Main.CreateEntry("HeadlampFloodScale", 0.2f, description: "Flood mode multiplies the knob by this, because a directional light needs far less.");
             HeadlampColor = Main.CreateEntry("HeadlampColor", "FFF0D8", description: "Headlamp colour, hex RGB.");
             HeadlampShadows = Main.CreateEntry("HeadlampShadows", false, description: "Let the headlamp cast shadows. Costs frames.");
             HeadlampForwardOffset = Main.CreateEntry("HeadlampForwardOffset", 0.25f, description: "Metres ahead of your eyes the headlamp sits.");

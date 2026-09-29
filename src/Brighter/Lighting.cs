@@ -197,7 +197,6 @@ namespace Brighter
                     Core.Log.Error("AddComponent(Light) returned something that is not a Light; the headlamp stays off for this session.");
                     Object.Destroy(_lampObject); _lampObject = null; _lampFailed = true; return;
                 }
-                _lamp.type = LightType.Point;
                 _lamp.renderMode = LightRenderMode.ForcePixel;
                 _lamp.cullingMask = -1;
                 Core.Log.Msg("Headlamp created.");
@@ -208,7 +207,14 @@ namespace Brighter
 
             _lampObject.SetActive(true);
             _lampObject.transform.position = eyes.position + eyes.forward * ModConfig.HeadlampForwardOffset.Value;
-            _lamp.intensity = ModConfig.HeadlampIntensity.Value;
+            _lampObject.transform.rotation = eyes.rotation;
+
+            // A point light falls off with the square of the distance, so a wall at arm's length
+            // blows out and trips the game's bloom while the far wall stays dim. A directional
+            // light has no falloff at all: near and far read the same.
+            var flood = string.Equals((ModConfig.HeadlampMode.Value ?? "point").Trim(), "flood", StringComparison.OrdinalIgnoreCase);
+            _lamp.type = flood ? LightType.Directional : LightType.Point;
+            _lamp.intensity = ModConfig.HeadlampIntensity.Value * (flood ? ModConfig.HeadlampFloodScale.Value : 1f);
             _lamp.range = ModConfig.HeadlampRange.Value;
             _lamp.shadows = ModConfig.HeadlampShadows.Value ? LightShadows.Soft : LightShadows.None;
             _lamp.color = ParseColor(ModConfig.HeadlampColor.Value);

@@ -52,7 +52,7 @@ The [INSTALL.md](INSTALL.md) walks through the steps in more detail.
 | [Descent](src/Descent/README.md) | 0.1.0 | Yes |
 | [StayPutVR](src/StayPutVR/README.md) | 0.4.0 | No |
 | [PartyHealth](src/PartyHealth/README.md) | 0.1.1 | No |
-| [Brighter](src/Brighter/README.md) | 0.3.0 | No |
+| [Brighter](src/Brighter/README.md) | 0.4.0 | No |
 
 ## Restrictions
 
